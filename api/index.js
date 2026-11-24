@@ -25,19 +25,6 @@ async function readBody(req) {
 export default async function handler(req, res) {
   const url = new URL(req.url, 'http://localhost');
   const body = await readBody(req);
-  if (req.method !== 'GET') {
-    // temporary debugging: shows up under Logs in Vercel
-    console.log('body debug', {
-      method: req.method,
-      bodyType: typeof req.body,
-      isBuffer: Buffer.isBuffer(req.body),
-      contentType: req.headers['content-type'],
-      contentLength: req.headers['content-length'],
-      transferEncoding: req.headers['transfer-encoding'],
-      stringLength: body.length,
-      preview: body.slice(0, 120),
-    });
-  }
 
   const result = await handle(
     {
