@@ -24,6 +24,20 @@ async function readBody(req) {
 // This small adapter translates one into the other.
 export default async function handler(req, res) {
   const url = new URL(req.url, 'http://localhost');
+  const body = await readBody(req);
+  if (req.method !== 'GET') {
+    // temporary debugging: shows up under Logs in Vercel
+    console.log('body debug', {
+      method: req.method,
+      bodyType: typeof req.body,
+      isBuffer: Buffer.isBuffer(req.body),
+      contentType: req.headers['content-type'],
+      contentLength: req.headers['content-length'],
+      transferEncoding: req.headers['transfer-encoding'],
+      stringLength: body.length,
+      preview: body.slice(0, 120),
+    });
+  }
 
   const result = await handle(
     {
@@ -31,7 +45,7 @@ export default async function handler(req, res) {
       path: url.pathname,
       headers: req.headers,
       queryStringParameters: Object.fromEntries(url.searchParams),
-      body: await readBody(req),
+      body,
       isBase64Encoded: false,
       requestContext: {},
     },
