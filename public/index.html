@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Weekly Plan.</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="brand"><span class="logo">WP</span><h1>Weekly Plan.</h1></header>
+
+  <nav class="week-nav">
+    <span id="freetime"></span>
+    <button id="prev" type="button" aria-label="Previous week">‹</button>
+    <span id="week-label"></span>
+    <button id="next" type="button" aria-label="Next week">›</button>
+  </nav>
+
+  <div class="day-names" id="day-names"></div>
+
+  <aside class="panels">
+    <section class="panel" id="panel-today">
+      <div class="panel-head">
+        <h2 class="toggle">Today’s Tasks</h2>
+        <button class="plus" type="button" popovertarget="task-popover" data-list="today" aria-label="Add a task for today">+</button>
+      </div>
+      <div class="panel-body" id="list-today"></div>
+    </section>
+
+    <section class="panel" id="panel-floating">
+      <div class="panel-head">
+        <h2 class="toggle">Floating Tasks</h2>
+        <button class="plus" type="button" popovertarget="task-popover" data-list="floating" aria-label="Add a floating task">+</button>
+      </div>
+      <div class="panel-body" id="list-floating"></div>
+    </section>
+
+    <section class="panel" id="panel-checklist">
+      <div class="panel-head">
+        <h2 class="toggle">Weekly Checklist</h2>
+        <button class="plus" type="button" popovertarget="task-popover" data-list="checklist" aria-label="Add a checklist task">+</button>
+      </div>
+      <div class="panel-body" id="list-checklist"></div>
+    </section>
+  </aside>
+
+  <main class="board">
+    <div class="times" id="times"></div>
+    <div class="calendar" id="calendar"></div>
+  </main>
+
+  <div id="task-popover" popover>
+    <form id="task-form">
+      <h2 id="form-title">What’s your plan?</h2>
+      <input name="title" placeholder="e.g. Physical Computing Homework..." required maxlength="80" autocomplete="off">
+      <label>Description
+        <input name="description" placeholder="e.g. Start researching Touch Designer..." maxlength="500" autocomplete="off">
+      </label>
+      <div class="row">
+        <label>Category
+          <select name="category">
+            <option value="School">School</option>
+            <option value="Work">Work</option>
+            <option value="Personal">Personal</option>
+          </select>
+        </label>
+        <label>Time Span (hrs)
+          <input type="number" name="hours" value="3" min="0.5" max="12" step="0.5" required>
+        </label>
+      </div>
+      <p id="form-error" role="alert"></p>
+      <div class="row bottom">
+        <label id="repeat-field" hidden>Repeat
+          <select name="repeat">
+            <option value="none">Doesn’t repeat</option>
+            <option value="daily">Every day</option>
+            <option value="weekly">Every week</option>
+          </select>
+        </label>
+        <button class="submit" id="form-submit" type="submit">Add Task</button>
+      </div>
+    </form>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
