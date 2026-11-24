@@ -3,8 +3,20 @@ import mongoose from 'mongoose';
 import TaskItem from './models/TaskItem.js';
 
 const app = express();
-// type: '*/*' = parse the body as JSON whatever Content-Type header arrives
-app.use(express.json({ type: '*/*' }));
+app.use(express.json());
+
+// On Vercel, serverless-http hands Express the body as raw bytes (a Buffer) and Express
+// skips parsing it. Locally this does nothing, because express.json() already made an object.
+app.use((req, res, next) => {
+  if (Buffer.isBuffer(req.body)) {
+    try {
+      req.body = req.body.length ? JSON.parse(req.body.toString('utf8')) : {};
+    } catch {
+      return res.status(400).json({ error: 'Request body must be valid JSON.' });
+    }
+  }
+  next();
+});
 
 // Reuse one connection across warm serverless invocations.
 let connecting;
@@ -59,7 +71,7 @@ router.delete('/:id', async (req, res) => {
 app.use('/api/tasks', router);
 
 app.use((err, req, res, next) => {
-  console.error('API error:', err.name, err.message, 'body seen by Express:', JSON.stringify(req.body)?.slice(0, 200));
+  console.error('API error:', err.name, err.message);
   const bad = err.name === 'ValidationError' || err.name === 'CastError';
   res.status(bad ? 400 : 500).json({ error: err.message });
 });
