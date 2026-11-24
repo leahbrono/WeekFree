@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 import TaskItem from './models/TaskItem.js';
 
 const app = express();
-app.use(express.json());
+// type: '*/*' = parse the body as JSON whatever Content-Type header arrives
+app.use(express.json({ type: '*/*' }));
 
 // Reuse one connection across warm serverless invocations.
 let connecting;
@@ -58,6 +59,7 @@ router.delete('/:id', async (req, res) => {
 app.use('/api/tasks', router);
 
 app.use((err, req, res, next) => {
+  console.error('API error:', err.name, err.message, 'body seen by Express:', JSON.stringify(req.body)?.slice(0, 200));
   const bad = err.name === 'ValidationError' || err.name === 'CastError';
   res.status(bad ? 400 : 500).json({ error: err.message });
 });
